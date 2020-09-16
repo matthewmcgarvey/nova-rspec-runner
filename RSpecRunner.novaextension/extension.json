@@ -1,0 +1,40 @@
+{
+    "identifier": "org.RSpecRunner",
+    "name": "RSpec Runner",
+    "organization": "MyOrganization",
+    "description": "Lorem ipsum, dolor sit amet.",
+    "version": "1.0",
+    "categories": ["commands"],
+    
+    "main": "main.js",
+    
+    "activationEvents": [
+        "onLanguage:html"
+    ],
+    
+    "entitlements": {
+        
+    },
+    
+    "commands": {
+        "extensions": [
+            {
+                "title": "Open URL",
+                "command": "rspec-runner.openURL"
+            },
+            {
+                "title": "Run External Tool",
+                "command": "rspec-runner.runExternalTool"
+            }
+        ]
+    },
+    
+    "config": [
+        {
+            "key": "rspec-runner.foobar",
+            "title": "Foo the bar",
+            "type": "boolean",
+            "default": false
+        }
+    ]
+}
