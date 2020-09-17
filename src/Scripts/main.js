@@ -1,57 +1,35 @@
+exports.activate = () => {};
 
-exports.activate = function() {
-    // Do work when the extension is activated
-}
+const issues = new IssueCollection();
 
-exports.deactivate = function() {
-    // Clean up state before the extension is deactivated
-}
+nova.commands.register("rspec-runner.allSpecs", (workspace) => {
+  issues.clear();
+  const proc = new Process("/usr/bin/env", {
+    args: ["rspec", "spec/", "--format", "json", "--out", ".nova/rspec.json"],
+    cwd: nova.workspace.path,
+  });
+  proc.onStdout((x) => console.log(x));
+  proc.onStderr((x) => console.error(x));
+  proc.start();
+  proc.onDidExit(() => {
+    const fp = nova.workspace.path + "/.nova/rspec.json";
+    const output = JSON.parse(nova.fs.open(fp).read());
 
-
-nova.commands.register("rspec-runner.openURL", (workspace) => {
-    var options = {
-        "placeholder": "https://foobar.com",
-        "prompt": "Open"
-    };
-    nova.workspace.showInputPanel("Enter the URL to open:", options, function(result) {
-        if (result) {
-            nova.openURL(result, function(success) {
-                
-            });
-        }
-    });
+    output.examples
+      .filter((example) => example.status === "failed")
+      .forEach((example) => {
+        const exception = example.exception;
+        const issue = new Issue();
+        issue.message = exception.message;
+        issue.severity = IssueSeverity.Error;
+        issue.line = example.line_number;
+        var path = nova.path.join(nova.workspace.path, example.file_path);
+        path = "file://" + path;
+        issues.append(path, [issue]);
+      });
+  });
 });
 
-
-nova.commands.register("rspec-runner.runExternalTool", (workspace) => {
-    var options = {
-        "placeholder": "/path/to/tool",
-        "prompt": "Run"
-    };
-    nova.workspace.showInputPanel("Enter the path to the external tool:", options, function(result) {
-        if (result) {
-            var options = {
-                // "args": [],
-                // "env": {},
-                // "stdin": <any buffer or string>
-            };
-            
-            var process = new Process(result, options);
-            var lines = [];
-            
-            process.onStdout(function(data) {
-                if (data) {
-                    lines.push(data);
-                }
-            });
-            
-            process.onDidExit(function(status) {
-                var string = "External Tool Exited with Stdout:\n" + lines.join("");
-                nova.workspace.showInformativeMessage(string);
-            });
-            
-            process.start();
-        }
-    });
-});
-
+exports.deactivate = () => {
+  issues.dispose();
+};

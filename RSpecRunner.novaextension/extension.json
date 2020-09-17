@@ -2,33 +2,52 @@
   "identifier": "org.RSpecRunner",
   "name": "RSpec Runner",
   "organization": "MyOrganization",
-  "description": "Lorem ipsum, dolor sit amet.",
-  "version": "1.0",
+  "description": "RSpec shortcuts",
+  "version": "0.1",
   "categories": ["commands"],
 
   "main": "main.dist.js",
 
-  "activationEvents": ["onLanguage:html"],
+  "activationEvents": ["onLanguage:ruby"],
 
-  "entitlements": {},
+  "entitlements": {
+    "process": true,
+    "filesystem": "readwrite"
+  },
 
   "commands": {
-    "extensions": [
+    "editor": [
       {
-        "title": "Open URL",
-        "command": "rspec-runner.openURL"
+        "title": "Run all specs",
+        "command": "rspec-runner.allSpecs",
+        "shortcut": "ctrl-r",
+        "when": "editorHasFocus"
       },
       {
-        "title": "Run External Tool",
-        "command": "rspec-runner.runExternalTool"
+        "title": "Run specs in file",
+        "command": "rspec-runner.fileSpecs",
+        "shortcut": "ctrl-t",
+        "when": "editorHasFocus",
+        "filter": {
+          "syntaxes": ["ruby"]
+        }
+      },
+      {
+        "title": "Run specs on line",
+        "command": "rspec-runner.lineSpecs",
+        "shortcut": "ctrl-l",
+        "when": "editorHasFocus",
+        "filter": {
+          "syntaxes": ["ruby"]
+        }
       }
     ]
   },
 
   "config": [
     {
-      "key": "rspec-runner.foobar",
-      "title": "Foo the bar",
+      "key": "rspec-runner.bundler",
+      "title": "Use bundler to run rspec",
       "type": "boolean",
       "default": false
     }
