@@ -45,10 +45,10 @@
     ]
   },
 
-  "config": [
+  "config-workspace": [
     {
       "key": "rspec-runner.bundler",
-      "title": "TODO: Use bundler to run rspec",
+      "title": "Use bundler to run rspec",
       "type": "boolean",
       "default": false
     }

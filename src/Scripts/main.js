@@ -22,8 +22,17 @@ const handleResults = () => {
 
 const runSpecsAndParseResults = (filePath) => {
   issues.clear();
+  const useBundler = nova.workspace.config.get("rspec-runner.bundler");
+  const rspecBase = useBundler ? ["bundle", "exec", "rspec"] : ["rspec"];
   const proc = new Process("/usr/bin/env", {
-    args: ["rspec", filePath, "--format", "json", "--out", ".nova/rspec.json"],
+    args: [
+      ...rspecBase,
+      filePath,
+      "--format",
+      "json",
+      "--out",
+      ".nova/rspec.json",
+    ],
     cwd: nova.workspace.path,
   });
   proc.onStdout((x) => console.log(x));
