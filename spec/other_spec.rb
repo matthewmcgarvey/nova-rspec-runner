@@ -5,6 +5,6 @@ RSpec.describe "other" do
   
   it "fails" do
     expect(true).to eq(true)
-    expect(2).to eq 2
+    expect(2).to eq 1
   end
 end
