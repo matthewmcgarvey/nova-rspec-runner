@@ -1,18 +1,19 @@
 {
-  "identifier": "org.RSpecRunner",
+  "identifier": "matthewmcgarvey.RSpecRunner",
   "name": "RSpec Runner",
-  "organization": "MyOrganization",
-  "description": "RSpec shortcuts",
-  "version": "0.1",
+  "organization": "Matthew McGarvey",
+  "description": "Easily run your specs with keyboard shortcuts",
+  "version": "0.1.0",
   "categories": ["commands"],
-
+  "repository": "https://github.com/matthewmcgarvey/nova-rspec-runner",
+  "bugs": "https://github.com/matthewmcgarvey/nova-rspec-runner/issues",
   "main": "main.dist.js",
 
   "activationEvents": ["onLanguage:ruby"],
 
   "entitlements": {
     "process": true,
-    "filesystem": "readwrite"
+    "filesystem": "readonly"
   },
 
   "commands": {
@@ -47,7 +48,7 @@
   "config": [
     {
       "key": "rspec-runner.bundler",
-      "title": "Use bundler to run rspec",
+      "title": "TODO: Use bundler to run rspec",
       "type": "boolean",
       "default": false
     }
