@@ -3,7 +3,7 @@
   "name": "RSpec Runner",
   "organization": "Matthew McGarvey",
   "description": "Easily run your specs with keyboard shortcuts",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "categories": ["commands"],
   "repository": "https://github.com/matthewmcgarvey/nova-rspec-runner",
   "bugs": "https://github.com/matthewmcgarvey/nova-rspec-runner/issues",
