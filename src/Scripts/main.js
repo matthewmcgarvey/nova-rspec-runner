@@ -1,23 +1,40 @@
 exports.activate = () => {};
 
 const issues = new IssueCollection();
+const workspace_regex = /\/Volumes\/[^\/]*\//;
+const line_number_regex = /:(\d*):in/;
 
 const handleResults = () => {
   const fp = nova.workspace.path + "/.nova/rspec.json";
   const output = JSON.parse(nova.fs.open(fp).read());
+  const workspace_path = nova.workspace.path.replace(workspace_regex, "/");
+  const failed_examples = output.examples.filter(
+    (example) => example.status === "failed"
+  );
 
-  output.examples
-    .filter((example) => example.status === "failed")
-    .forEach((example) => {
-      const exception = example.exception;
-      const issue = new Issue();
-      issue.message = exception.message;
-      issue.severity = IssueSeverity.Error;
-      issue.line = example.line_number;
-      var path = nova.path.join(nova.workspace.path, example.file_path);
-      path = "file://" + path;
-      issues.append(path, [issue]);
-    });
+  if (failed_examples.length == 0) {
+    const issue = new Issue();
+    issue.message = "Success";
+    issue.secerity = IssueSeverity.Info;
+    issues.append(workspace_path, [issue]);
+  }
+
+  failed_examples.forEach((example) => {
+    const exception = example.exception;
+    const issue = new Issue();
+    const backtrace = exception.backtrace.find((line) =>
+      line.startsWith(workspace_path)
+    );
+    const line_number = backtrace
+      ? backtrace.match(line_number_regex)[1]
+      : example.line_number;
+    issue.message = exception.message.trim();
+    issue.severity = IssueSeverity.Error;
+    issue.line = line_number;
+    var path = nova.path.join(workspace_path, example.file_path);
+    path = "file://" + path;
+    issues.append(path, [issue]);
+  });
 };
 
 const runSpecsAndParseResults = (filePath) => {
